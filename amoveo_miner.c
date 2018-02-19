@@ -94,7 +94,7 @@ int main(void) {
             INPUT_SIZE * sizeof(char), C, 0, NULL, NULL);
 
     // Display the result to the screen
-    for(i = 0; i < 66; i++) {
+    for(i = 0; i < 10; i++) {
       int x = C[i];
       printf("%d\n", x);
     }

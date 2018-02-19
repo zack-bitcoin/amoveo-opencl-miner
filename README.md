@@ -11,10 +11,14 @@ So far, it does this:
 3) receives the new 66 bytes from the GPU
 4) prints out the new values of each byte.
 
+## build and run
 
+```
+sh compile.sh
+./amoveo_miner
+``
 
-The next steps:
-* add a sha256 function to the kernel,
+## The next steps
 
 * take the hash of the 66 bytes, and store it in the first 32 bytes. Verify that the hash is the same as what erlang would generate.
 

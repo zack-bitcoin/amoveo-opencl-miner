@@ -43,7 +43,8 @@ uint gamma1(uint x) {
 
 
 ////# __kernel void sha256_crypt_kernel(__global uint *data_info,__global char *plain_key,  __global uint *digest){
-void hash(uint *data_info, uint *plain_key, uint *digest){
+
+void hash(uint data_info, uint plain_key, uint digest){
   int t, gid, msg_pad;
   int stop, mmod;
   uint i, ulen, item, total;
@@ -130,7 +131,7 @@ void hash(uint *data_info, uint *plain_key, uint *digest){
       } else if (mmod == 1) {
         W[t] = ((uchar)  plain_key[msg_pad + t * 4]) << 24;
         W[t] |=  0x800000 ;
-	} else { //if (mmod == 0)
+      } else /*if (mmod == 0)*/ {
         W[t] =  0x80000000 ;
       }
       
@@ -163,6 +164,7 @@ void hash(uint *data_info, uint *plain_key, uint *digest){
     digest[5] += F;
     digest[6] += G;
     digest[7] += H;
+
   //  for (t = 0; t < 80; t++)
   //    {
   //    printf("W[%d]: %u\n",t,W[t]);
@@ -171,6 +173,7 @@ void hash(uint *data_info, uint *plain_key, uint *digest){
 
 
 }
+
 
 
 __kernel void amoveo_mine(__global uint *Z) {
