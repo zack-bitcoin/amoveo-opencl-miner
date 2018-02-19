@@ -42,14 +42,38 @@ uint gamma1(uint x) {
 }
 
 
+__kernel void amoveo_mine(__global uint *Z) {
+  Z[8] = 20;
+  printf("here 00 \n");
+  uint data_info[3];
+  char plain_key[10] = "abcdef";//saved_plain
+  //data[0] = SHA256_PLAINTEXT_LENGTH;
+  data_info[0] = 64;
+  data_info[1] = 1;//global work size
+  data_info[2] = strlen(plain_key);
+  printf("%d\n", data_info[2]);
+  uint digest[8];
+  for (uint i = 0; i < 8; i++) {
+    digest[i] = 0;
+    data_info[i] = 0;
+  }
+  printf("here 01 \n");
+  //hash(data_info, plain_key, digest); 
+  //hash(*data_info, *plain_key, *digest); 
+  //hash(); 
+  //uint *digest; //partial_hashes
+  
+  //}
 ////# __kernel void sha256_crypt_kernel(__global uint *data_info,__global char *plain_key,  __global uint *digest){
-void hash(uint *data_info, uint *plain_key, uint *digest){
+//void hash(uint* data_info, uint* plain_key, uint* digest){
+//void hash(){
   int t, gid, msg_pad;
   int stop, mmod;
   uint i, ulen, item, total;
   uint W[80], temp, A,B,C,D,E,F,G,H,T1,T2;
   uint num_keys = data_info[1];
   int current_pad;
+  printf("hash 02\n");
 
   uint K[64]={
 0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -63,20 +87,28 @@ void hash(uint *data_info, uint *plain_key, uint *digest){
 };
 
   msg_pad=0;
+  printf("hash 03\n");
 
   ulen = data_info[2];
   total = ulen%64>=56?2:1 + ulen/64;
+  printf("hash 04\n");
+  printf("%i\n", H0);
+  //printf("%i\n", digest[0]);
 
+  printf("hash 04\n");
 //  printf("ulen: %u total:%u\n", ulen, total);
 
   digest[0] = H0;
+  printf("hash 05\n");
   digest[1] = H1;
   digest[2] = H2;
   digest[3] = H3;
+  printf("hash 055\n");
   digest[4] = H4;
   digest[5] = H5;
   digest[6] = H6;
   digest[7] = H7;
+  printf("hash 06\n");
   for(item=0; item<total; item++)
   {
 
@@ -163,16 +195,15 @@ void hash(uint *data_info, uint *plain_key, uint *digest){
     digest[5] += F;
     digest[6] += G;
     digest[7] += H;
+    for (uint i = 0; i < 8; i++) {
+      Z[i] = digest[i];
+    }
   //  for (t = 0; t < 80; t++)
   //    {
   //    printf("W[%d]: %u\n",t,W[t]);
   //    }
   }
 
-
 }
 
 
-__kernel void amoveo_mine(__global uint *Z) {
-	 Z[3] = 20;
-}

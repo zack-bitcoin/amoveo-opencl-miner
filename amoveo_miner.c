@@ -95,8 +95,13 @@ int main(void) {
 
     // Display the result to the screen
     for(i = 0; i < 10; i++) {
-      int x = C[i];
-      printf("%d\n", x);
+      //<<202,151,129,18,202,27,189,202,250,194,49,179,154,35,220,
+      unsigned int x = C[i];
+      int a = x % 256;
+      int b = (x / 256) % 256;
+      int c = ((x / 256) / 256) % 256;
+      int d = (((x / 256) / 256) / 256) % 256;
+      printf("%d %d %d %d\n", d, c, b, a);
     }
 
     // Clean up

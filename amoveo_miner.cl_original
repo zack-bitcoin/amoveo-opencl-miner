@@ -1,4 +1,0 @@
-
-__kernel void amoveo_mine(__global uint *A) {
-	 A[3] = 20;
-}

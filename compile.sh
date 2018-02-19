@@ -1,2 +1,2 @@
 
-gcc amoveo_miner.c -o amoveo_miner -framework OpenCL
+gcc amoveo_miner.c -Wall -o amoveo_miner -framework OpenCL
