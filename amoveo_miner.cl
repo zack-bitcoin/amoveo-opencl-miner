@@ -63,9 +63,13 @@ __kernel void amoveo_mine(__global uchar *Z) {
   //char plain_key[66] = "a";
 
   uchar plain_key[67];// = "a";
+  //uint kernel_id = get_global_id(0) % 2;
+  //printf("kernel id %u\n", kernel_id);
   for (uint i = 0; i < 66; i++) {
     plain_key[i] = Z[i];
   }
+  //plain_key[63] = kernel_id;
+  
   data_info[0] = 64;
   data_info[1] = 1;//global work size
   data_info[2] = strlen(plain_key);
@@ -238,22 +242,22 @@ __kernel void amoveo_mine(__global uchar *Z) {
 	}
       }
     }
-
+    //printf("our diff %u\n", our_diff);
     //check if our_diff > difficulty
     //if it is, then save the nonce.
     uint difficulty = (256 * Z[64]) + Z[65];
     if (our_diff > difficulty) {
       for (uint i = 0; i < 32; i++) {
-	Z[66+i] = Z[32+i];
+	Z[68+i] = Z[32+i];
       }
     }
 
 
 
     //for testing purposes
-    for (uint i = 0; i < 32; i++) {
-      Z[i] = digest_bytes[i];
-    }
+    //for (uint i = 0; i < 32; i++) {
+    //  Z[i] = digest_bytes[i];
+    //}
   
     //  for (t = 0; t < 80; t++)
   //    {
