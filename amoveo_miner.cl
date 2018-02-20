@@ -42,12 +42,12 @@ uint gamma1(uint x) {
 }
 
 
-__kernel void amoveo_mine(__global uint *Z) {
-  Z[8] = 20;
+__kernel void amoveo_mine(__global uchar *Z) {
+  Z[32] = 20;
 
   //preparing for sha256
   uint data_info[3];
-  char plain_key[2] = "a";
+  char plain_key[66] = "ab";
   data_info[0] = 64;
   data_info[1] = 1;//global work size
   data_info[2] = strlen(plain_key);
@@ -199,15 +199,23 @@ __kernel void amoveo_mine(__global uint *Z) {
     uchar hash_int;
     uchar hash_bit;
     uchar hash_bit2;
+    //202 is 011001010 = 2+8+64+128
     for(uint i = 0; i < 256; i++) {
       if (diff_flag == 1) {
 	hash_int = i / 8;
 	hash_bit = (7 - (i % 8));
+	//hash_bit = (i % 8);
 	hash_bit2 = ((digest_bytes[hash_int]) >> hash_bit) & 1;
+	printf("hashbit2 %d\n", hash_bit2);
+	printf("hashbit %d\n", hash_bit);
+	printf("digest_bytes[0] %d\n", digest_bytes[hash_int]);
+	printf("digest_bytes[0] %d\n", digest_bytes[hash_int+1]);
+	printf("digest_bytes[0] %d\n", digest_bytes[hash_int] << (i % 8));
+	printf("digest_bytes[0] %d\n", digest_bytes[hash_int+1] >> (hash_bit + 1));
 	if (hash_bit2 == 1) {
 	  diff_flag = 0;
 	  our_diff *= 256;
-	  our_diff += ((digest_bytes[hash_int] << hash_bit) + (digest_bytes[hash_int+1] >> hash_bit));
+	  our_diff += ((digest_bytes[hash_int] << (i % 8)) + (digest_bytes[hash_int+1] >> (hash_bit + 1)));
 	} else {
 	  our_diff++;
 	}
@@ -220,8 +228,8 @@ __kernel void amoveo_mine(__global uint *Z) {
 
 
     //for testing purposes
-    for (uint i = 0; i < 8; i++) {
-      Z[i] = digest[i];
+    for (uint i = 0; i < 32; i++) {
+      Z[i] = digest_bytes[i];
     }
   
     //  for (t = 0; t < 80; t++)
