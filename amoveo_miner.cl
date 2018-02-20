@@ -43,7 +43,7 @@ uint gamma1(uint x) {
 
 
 __kernel void amoveo_mine(__global uchar *Z) {
-  Z[32] = 20;
+  //Z[32] = 20;
 
   //increment the nonce.
   uchar carry_flag = 1;
@@ -64,7 +64,7 @@ __kernel void amoveo_mine(__global uchar *Z) {
 
   uchar plain_key[67];// = "a";
   for (uint i = 0; i < 66; i++) {
-    plain_key[i] = 4;
+    plain_key[i] = Z[i];
   }
   data_info[0] = 64;
   data_info[1] = 1;//global work size

@@ -19,7 +19,7 @@ int main(void) {
     5,5,5,5,5,5,5,5,
     5,5,5,5,5,5,5,5
   };
-  char diff[2] = { 0, 7 };
+  char diff[2] = { 1, 200 };
   char nonce[32] = {
     4,4,4,4,4,4,4,4,
     4,4,4,4,4,4,4,4,
@@ -83,7 +83,7 @@ int main(void) {
     ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&a_mem_obj);
 
     // Execute the OpenCL kernel on the list
-    size_t global_item_size = 10000; // How many times we run the kernel in total
+    size_t global_item_size = 10; // How many times we run the kernel in total
     size_t local_item_size = 1; // Process in groups of 1
     ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, 
             &global_item_size, &local_item_size, 0, NULL, NULL);
