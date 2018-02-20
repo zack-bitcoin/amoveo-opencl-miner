@@ -46,16 +46,20 @@ __kernel void amoveo_mine(__global uint *Z) {
   Z[8] = 20;
   printf("here 00 \n");
   uint data_info[3];
-  char plain_key[10] = "abcdef";//saved_plain
+  //char plain_key[10] = "abcdef";//saved_plain
+  //  char plain_key[64] = "alphabet";
+  char plain_key[2] = "a";
+  //char plain_key;
+  //memcpy(plain_key, plain, strlen(plain_key)+1);
+  //char plain_key[2] = "a";
   //data[0] = SHA256_PLAINTEXT_LENGTH;
   data_info[0] = 64;
-  data_info[1] = 1;//global work size
+  data_info[1] = 2;//global work size
   data_info[2] = strlen(plain_key);
   printf("%d\n", data_info[2]);
   uint digest[8];
   for (uint i = 0; i < 8; i++) {
     digest[i] = 0;
-    data_info[i] = 0;
   }
   printf("here 01 \n");
   //hash(data_info, plain_key, digest); 
@@ -91,11 +95,7 @@ __kernel void amoveo_mine(__global uint *Z) {
 
   ulen = data_info[2];
   total = ulen%64>=56?2:1 + ulen/64;
-  printf("hash 04\n");
-  printf("%i\n", H0);
-  //printf("%i\n", digest[0]);
 
-  printf("hash 04\n");
 //  printf("ulen: %u total:%u\n", ulen, total);
 
   digest[0] = H0;
