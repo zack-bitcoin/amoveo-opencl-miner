@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>//for testing only
 
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
@@ -83,8 +84,9 @@ int main(void) {
     ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&a_mem_obj);
 
     // Execute the OpenCL kernel on the list
-    size_t global_item_size = 10; // How many times we run the kernel in total
+    size_t global_item_size = 1000000; // How many times we run the kernel in total
     size_t local_item_size = 1; // Process in groups of 1
+    clock_t begin = clock();//for testing only.
     ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, 
             &global_item_size, &local_item_size, 0, NULL, NULL);
 
@@ -92,6 +94,10 @@ int main(void) {
     int *C = (int*)malloc(sizeof(char)*INPUT_SIZE);
     ret = clEnqueueReadBuffer(command_queue, a_mem_obj, CL_TRUE, 0, 
             INPUT_SIZE * sizeof(char), C, 0, NULL, NULL);
+    clock_t end = clock();//for testing only.
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;//for testing only
+    double speed = 1 / time_spent;//for testing only
+    printf("speed result: %f megahashes per second per CPU\n", speed);//for testing only
 
     // Display the result to the screen
     for(i = 0; i < 10; i++) {
