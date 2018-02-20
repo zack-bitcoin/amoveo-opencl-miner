@@ -47,7 +47,7 @@ __kernel void amoveo_mine(__global uchar *Z) {
 
   //preparing for sha256
   uint data_info[3];
-  char plain_key[66] = "ab";
+  char plain_key[66] = "a";
   data_info[0] = 64;
   data_info[1] = 1;//global work size
   data_info[2] = strlen(plain_key);
@@ -55,6 +55,17 @@ __kernel void amoveo_mine(__global uchar *Z) {
   uint digest[8];
   for (uint i = 0; i < 8; i++) {
     digest[i] = 0;
+  }
+  uchar carry_flag = 1;
+  for (uint i = 0; i < 32; i++) {
+    if (carry_flag == 1) {
+      if (Z[32 + i] == 255) {
+	Z[32 + i] = 0;
+      } else {
+	Z[32 + i] ++;
+	carry_flag = 0;
+      }
+    }
   }
   //increment the nonce.
 
