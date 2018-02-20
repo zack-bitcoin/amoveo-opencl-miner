@@ -19,7 +19,7 @@ int main(void) {
     5,5,5,5,5,5,5,5,
     5,5,5,5,5,5,5,5
   };
-  char diff[2] = { 6, 7 };
+  char diff[2] = { 0, 7 };
   char nonce[32] = {
     4,4,4,4,4,4,4,4,
     4,4,4,4,4,4,4,4,
@@ -27,7 +27,7 @@ int main(void) {
     4,4,4,4,4,4,4,4
   };
   const int INPUT_SIZE = 1024;
-  int *A = (int*)malloc(sizeof(char)*INPUT_SIZE);//maybe we should make a different nonce for each kernel.
+  char *A = (char*)malloc(sizeof(char)*INPUT_SIZE);//maybe we should make a different nonce for each kernel.
   for(i = 0; i < 32; i++) {
     A[i] = bhash[i];
     A[i+32] = nonce[i];
@@ -83,7 +83,7 @@ int main(void) {
     ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&a_mem_obj);
 
     // Execute the OpenCL kernel on the list
-    size_t global_item_size = 1; // How many times we run the kernel in total
+    size_t global_item_size = 10000; // How many times we run the kernel in total
     size_t local_item_size = 1; // Process in groups of 1
     ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, 
             &global_item_size, &local_item_size, 0, NULL, NULL);
@@ -96,12 +96,12 @@ int main(void) {
     // Display the result to the screen
     for(i = 0; i < 10; i++) {
       //<<202,151,129,18,202,27,189,202,250,194,49,179,154,35,220,
-      unsigned int x = C[i];
+      unsigned int x = C[i+16];
       int a = x % 256;
       int b = (x / 256) % 256;
       int c = ((x / 256) / 256) % 256;
       int d = (((x / 256) / 256) / 256) % 256;
-      printf("%d %d %d %d\n", d, c, b, a);
+      printf("%d %d %d %d\n", a,b,c,d);
     }
 
     // Clean up

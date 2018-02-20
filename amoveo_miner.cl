@@ -45,17 +45,7 @@ uint gamma1(uint x) {
 __kernel void amoveo_mine(__global uchar *Z) {
   Z[32] = 20;
 
-  //preparing for sha256
-  uint data_info[3];
-  char plain_key[66] = "a";
-  data_info[0] = 64;
-  data_info[1] = 1;//global work size
-  data_info[2] = strlen(plain_key);
-  //printf("%d\n", data_info[2]);
-  uint digest[8];
-  for (uint i = 0; i < 8; i++) {
-    digest[i] = 0;
-  }
+  //increment the nonce.
   uchar carry_flag = 1;
   for (uint i = 0; i < 32; i++) {
     if (carry_flag == 1) {
@@ -67,7 +57,23 @@ __kernel void amoveo_mine(__global uchar *Z) {
       }
     }
   }
-  //increment the nonce.
+
+  //preparing for sha256
+  uint data_info[3];
+  //char plain_key[66] = "a";
+
+  uchar plain_key[67];// = "a";
+  for (uint i = 0; i < 66; i++) {
+    plain_key[i] = 4;
+  }
+  data_info[0] = 64;
+  data_info[1] = 1;//global work size
+  data_info[2] = strlen(plain_key);
+  //printf("%d\n", data_info[2]);
+  uint digest[8];
+  for (uint i = 0; i < 8; i++) {
+    digest[i] = 0;
+  }
 
   //SHA256 starts.
 
@@ -96,7 +102,8 @@ __kernel void amoveo_mine(__global uchar *Z) {
   msg_pad=0;
 
   ulen = data_info[2];
-  total = ulen%64>=56?2:1 + ulen/64;
+  //total = ulen%64>=56?2:1 + ulen/64;
+  total = 1;
 
 //  printf("ulen: %u total:%u\n", ulen, total);
 
@@ -215,14 +222,13 @@ __kernel void amoveo_mine(__global uchar *Z) {
       if (diff_flag == 1) {
 	hash_int = i / 8;
 	hash_bit = (7 - (i % 8));
-	//hash_bit = (i % 8);
 	hash_bit2 = ((digest_bytes[hash_int]) >> hash_bit) & 1;
-	printf("hashbit2 %d\n", hash_bit2);
-	printf("hashbit %d\n", hash_bit);
-	printf("digest_bytes[0] %d\n", digest_bytes[hash_int]);
-	printf("digest_bytes[0] %d\n", digest_bytes[hash_int+1]);
-	printf("digest_bytes[0] %d\n", digest_bytes[hash_int] << (i % 8));
-	printf("digest_bytes[0] %d\n", digest_bytes[hash_int+1] >> (hash_bit + 1));
+	//printf("hashbit2 %d\n", hash_bit2);
+	//printf("hashbit %d\n", hash_bit);
+	//printf("digest_bytes[0] %d\n", digest_bytes[hash_int]);
+	//printf("digest_bytes[0] %d\n", digest_bytes[hash_int+1]);
+	//printf("digest_bytes[0] %d\n", digest_bytes[hash_int] << (i % 8));
+	//printf("digest_bytes[0] %d\n", digest_bytes[hash_int+1] >> (hash_bit + 1));
 	if (hash_bit2 == 1) {
 	  diff_flag = 0;
 	  our_diff *= 256;
@@ -232,10 +238,16 @@ __kernel void amoveo_mine(__global uchar *Z) {
 	}
       }
     }
-    printf("our diff %u\n", our_diff);
 
     //check if our_diff > difficulty
     //if it is, then save the nonce.
+    uint difficulty = (256 * Z[64]) + Z[65];
+    if (our_diff > difficulty) {
+      for (uint i = 0; i < 32; i++) {
+	Z[66+i] = Z[32+i];
+      }
+    }
+
 
 
     //for testing purposes
