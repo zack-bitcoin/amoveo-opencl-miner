@@ -16,7 +16,7 @@ So far, it does this:
 ```
 sh compile.sh
 ./amoveo_miner
-``
+```
 
 ## The next steps
 
