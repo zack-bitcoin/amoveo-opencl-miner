@@ -44,23 +44,22 @@ uint gamma1(uint x) {
 
 __kernel void amoveo_mine(__global uint *Z) {
   Z[8] = 20;
-  printf("here 00 \n");
+
+  //preparing for sha256
   uint data_info[3];
   char plain_key[2] = "a";
   data_info[0] = 64;
   data_info[1] = 1;//global work size
   data_info[2] = strlen(plain_key);
-  printf("%d\n", data_info[2]);
+  //printf("%d\n", data_info[2]);
   uint digest[8];
   for (uint i = 0; i < 8; i++) {
     digest[i] = 0;
   }
-  printf("here 01 \n");
-  //hash(data_info, plain_key, digest); 
-  //hash(*data_info, *plain_key, *digest); 
-  //hash(); 
-  //uint *digest; //partial_hashes
-  
+  //increment the nonce.
+
+  //SHA256 starts.
+
   //}
 ////# __kernel void sha256_crypt_kernel(__global uint *data_info,__global char *plain_key,  __global uint *digest){
 //void hash(uint* data_info, uint* plain_key, uint* digest){
@@ -71,7 +70,6 @@ __kernel void amoveo_mine(__global uint *Z) {
   uint W[80], temp, A,B,C,D,E,F,G,H,T1,T2;
   uint num_keys = data_info[1];
   int current_pad;
-  printf("hash 02\n");
 
   uint K[64]={
 0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -85,7 +83,6 @@ __kernel void amoveo_mine(__global uint *Z) {
 };
 
   msg_pad=0;
-  printf("hash 03\n");
 
   ulen = data_info[2];
   total = ulen%64>=56?2:1 + ulen/64;
@@ -93,16 +90,13 @@ __kernel void amoveo_mine(__global uint *Z) {
 //  printf("ulen: %u total:%u\n", ulen, total);
 
   digest[0] = H0;
-  printf("hash 05\n");
   digest[1] = H1;
   digest[2] = H2;
   digest[3] = H3;
-  printf("hash 055\n");
   digest[4] = H4;
   digest[5] = H5;
   digest[6] = H6;
   digest[7] = H7;
-  printf("hash 06\n");
   for(item=0; item<total; item++)
   {
 
@@ -189,15 +183,52 @@ __kernel void amoveo_mine(__global uint *Z) {
     digest[5] += F;
     digest[6] += G;
     digest[7] += H;
+
+    //SHA256 ends.
+    //hash2integer
+    //(256*number of leading 0 bits) + byte starting with 1.
+    uchar digest_bytes[32];
+    for (uint i = 0; i < 8; i++) {
+      digest_bytes[(i*4)+ 3] = digest[i] % 256;
+      digest_bytes[(i*4)+ 2] = (digest[i] / 256) % 256;
+      digest_bytes[(i*4)+ 1] = ((digest[i] / 256)/256) % 256;
+      digest_bytes[(i*4)+ 0] = (((digest[i] / 256)/256)/256);
+    }
+    uint our_diff = 0;
+    uchar diff_flag = 1;
+    uchar hash_int;
+    uchar hash_bit;
+    uchar hash_bit2;
+    for(uint i = 0; i < 256; i++) {
+      if (diff_flag == 1) {
+	hash_int = i / 8;
+	hash_bit = (7 - (i % 8));
+	hash_bit2 = ((digest_bytes[hash_int]) >> hash_bit) & 1;
+	if (hash_bit2 == 1) {
+	  diff_flag = 0;
+	  our_diff *= 256;
+	  our_diff += ((digest_bytes[hash_int] << hash_bit) + (digest_bytes[hash_int+1] >> hash_bit));
+	} else {
+	  our_diff++;
+	}
+      }
+    }
+    printf("our diff %u\n", our_diff);
+
+    //check if our_diff > difficulty
+    //if it is, then save the nonce.
+
+
+    //for testing purposes
     for (uint i = 0; i < 8; i++) {
       Z[i] = digest[i];
     }
-  //  for (t = 0; t < 80; t++)
+  
+    //  for (t = 0; t < 80; t++)
   //    {
   //    printf("W[%d]: %u\n",t,W[t]);
   //    }
   }
-
 }
 
 
