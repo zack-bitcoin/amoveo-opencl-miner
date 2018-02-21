@@ -6,7 +6,6 @@
 %-define(Peer, "http://localhost:8085/").%for a mining pool on the same computer.
 %-define(Peer, "http://159.89.106.253:8085/").%for a mining pool on the server.
 -define(CORES, 1).
--define(mode, pool).
 -define(Pubkey, <<"BMjV7rAAssU+DGd8w+6XsyDSdgoichddlSipZT3U+jehHSD68UwPdF9TO3HQ0g4hCh2rgUQyqPnP7vP0i/l8Ijw=">>).
 -define(period, 10).%how long to wait in seconds before checking if new mining data is available.
 -define(pool_sleep_period, 1000).%How long to wait in miliseconds if we cannot connect to the mining pool.
@@ -85,7 +84,7 @@ start_c_miners(R) ->
 		_ ->
 		    BinNonce = base64:encode(<<Nonce:256>>),
 		    Data = << <<"[\"work\",\"">>/binary, BinNonce/binary, <<"\",\"">>/binary, ?Pubkey/binary, <<"\"]">>/binary>>,
-		    talk_helper(Data, ?Peer, 5),
+		    talk_helper(Data, ?Peer, 2),
 		    io:fwrite("Found a block. 2\n"),
 		    file:delete("nonce.txt"),
 		    timer:sleep(200)

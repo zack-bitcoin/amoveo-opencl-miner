@@ -10,7 +10,7 @@
 
 #define MAX_SOURCE_SIZE (0x100000)
 
-int read_input(char B[32], char N[32]) {
+int read_input(unsigned char B[32], unsigned char N[32]) {
   FILE *fileptr;
   fileptr = fopen("mining_input", "rb");
   fseek(fileptr, 0, SEEK_END);  // Jump to the end of the file
@@ -23,10 +23,10 @@ int read_input(char B[32], char N[32]) {
   //N[29] = (id / 256) % 256;
   //N[30] = ((id / 256) / 256) % 256;
   //N[31] = (((id / 256) / 256) / 256) % 256;
-  char buffer[10] = { 0 };
+  unsigned char buffer[10] = { 0 };
   fread(buffer, filelen-64, 1, fileptr);
-  int diff = 0;
-  char c = 1;
+  unsigned int diff = 0;
+  unsigned char c = 1;
   for (int i = 0; i < 10; i++) {
     c = buffer[i];
     if (c == 0) {
@@ -53,9 +53,10 @@ void write_nonce(unsigned char x[32]) {
 int main(void) {
   //create the input vector
   //66 = 32 byts of bhash + 32 bytes of nonce + 2 bytes of difficulty
-  int i;
-  //char bhash[32];
-  //char nonce[32];
+  unsigned int i;
+  unsigned char bhash[32];
+  unsigned char nonce[32];
+  /*
   char bhash[32] = {
     5,5,5,5,5,5,5,5,
     5,5,5,5,5,5,5,5,
@@ -70,19 +71,20 @@ int main(void) {
     4,4,4,4,4,4,4,4
   };
   int difficulty = 300;
-  /*
   */
-  //unsigned int difficulty = read_input(bhash, nonce);
+  unsigned int difficulty = read_input(bhash, nonce);
   printf("difficulty %u\n", difficulty);
   const int INPUT_SIZE = 1024;
   unsigned char *A = (unsigned char*)malloc(sizeof(char)*INPUT_SIZE);//maybe we should make a different nonce for each kernel.
   for(i = 0; i < 32; i++) {
     A[i] = bhash[i];
     A[i+32] = nonce[i];
+    A[i+68] = 0;
   }
   A[64] = difficulty / 256;
   A[65] = difficulty % 256;
-
+  A[66] = 0;
+  A[67] = 0;
   FILE *fp;
   char *source_str;
   size_t source_size;
@@ -133,7 +135,7 @@ int main(void) {
     // Execute the OpenCL kernel on the list
     //size_t global_item_size = 1000000; // How many times we run the kernel in total
     //size_t global_item_size = 5000000; // How many times we run the kernel in total
-    size_t global_item_size = 1; // How many times we run the kernel in total
+    size_t global_item_size = 5000; // How many times we run the kernel in total
     size_t local_item_size = 1; // Process in groups of 1
     //clock_t begin = clock();//for testing only.
     ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, 

@@ -12,6 +12,12 @@ sh compile.sh
 ./amoveo_miner
 ```
 
+## done
+
+* we can calculate the hash of a header correctly.
+* we can calculate hash2integer correctly.
+
+
 ## The next steps
 
 
