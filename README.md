@@ -14,4 +14,5 @@ sh compile.sh
 
 ## The next steps
 
+
 * connect the c code to the erlang from amoveo-c-miner so we can give the work to the server.

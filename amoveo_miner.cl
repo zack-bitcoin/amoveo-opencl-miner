@@ -60,19 +60,19 @@ __kernel void amoveo_mine(__global uchar *Z) {
 
   //preparing for sha256
   uint data_info[3];
-  //char plain_key[66] = "a";
+  //uchar plain_key[66] = "a";
 
   uchar plain_key[67];// = "a";
-  //uint kernel_id = get_global_id(0) % 2;
-  //printf("kernel id %u\n", kernel_id);
   for (uint i = 0; i < 66; i++) {
-    plain_key[i] = Z[i];
+    //plain_key[i] = Z[i];
+    plain_key[i] = 0;
   }
-  //plain_key[63] = kernel_id;
-  
   data_info[0] = 64;
   data_info[1] = 1;//global work size
-  data_info[2] = strlen(plain_key);
+  //data_info[2] = strlen(plain_key);
+  //  printf("plainkey length %u\n", strlen(plain_key));
+  data_info[2] = 66; 
+  //data_info[2] = 1;
   //printf("%d\n", data_info[2]);
   uint digest[8];
   for (uint i = 0; i < 8; i++) {
@@ -106,8 +106,8 @@ __kernel void amoveo_mine(__global uchar *Z) {
   msg_pad=0;
 
   ulen = data_info[2];
-  //total = ulen%64>=56?2:1 + ulen/64;
-  total = 1;
+  total = ulen%64>=56?2:1 + ulen/64;
+  //total = 1;
 
 //  printf("ulen: %u total:%u\n", ulen, total);
 
@@ -209,7 +209,8 @@ __kernel void amoveo_mine(__global uchar *Z) {
     //SHA256 ends.
     //hash2integer
     //(256*number of leading 0 bits) + byte starting with 1.
-    uchar digest_bytes[32];
+  }
+  uchar digest_bytes[32];
     for (uint i = 0; i < 8; i++) {
       digest_bytes[(i*4)+ 3] = digest[i] % 256;
       digest_bytes[(i*4)+ 2] = (digest[i] / 256) % 256;
@@ -251,6 +252,16 @@ __kernel void amoveo_mine(__global uchar *Z) {
 	Z[68+i] = Z[32+i];
       }
     }
+    printf("digest bytes\n");
+    for (uint i = 0; i < 32; i++) {
+      if ((i % 8) == 0) {
+	printf("\n");
+      }
+      printf("%u ", digest_bytes[i]);
+    }     
+    printf("\ndigest bytes end\n");
+    /*
+    */
 
 
 
@@ -263,7 +274,6 @@ __kernel void amoveo_mine(__global uchar *Z) {
   //    {
   //    printf("W[%d]: %u\n",t,W[t]);
   //    }
-  }
 }
 
 

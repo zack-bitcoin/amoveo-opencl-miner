@@ -54,17 +54,15 @@ int main(void) {
   //create the input vector
   //66 = 32 byts of bhash + 32 bytes of nonce + 2 bytes of difficulty
   int i;
-  char bhash[32];
-  char nonce[32];
-  char diff[2];
-  /*
+  //char bhash[32];
+  //char nonce[32];
   char bhash[32] = {
     5,5,5,5,5,5,5,5,
     5,5,5,5,5,5,5,5,
     5,5,5,5,5,5,5,5,
     5,5,5,5,5,5,5,5
   };
-  char diff[2] = { 1, 200 };
+  //char diff[2] = { 1, 200 };
   char nonce[32] = {
     4,4,4,4,4,4,4,4,
     4,4,4,4,4,4,4,4,
@@ -72,19 +70,18 @@ int main(void) {
     4,4,4,4,4,4,4,4
   };
   int difficulty = 300;
+  /*
   */
-  unsigned int difficulty = read_input(bhash, nonce);
+  //unsigned int difficulty = read_input(bhash, nonce);
   printf("difficulty %u\n", difficulty);
-  diff[0] = difficulty / 256;
-  diff[1] = difficulty % 256;
   const int INPUT_SIZE = 1024;
   unsigned char *A = (unsigned char*)malloc(sizeof(char)*INPUT_SIZE);//maybe we should make a different nonce for each kernel.
   for(i = 0; i < 32; i++) {
     A[i] = bhash[i];
     A[i+32] = nonce[i];
   }
-  A[64] = diff[0];
-  A[65] = diff[1];
+  A[64] = difficulty / 256;
+  A[65] = difficulty % 256;
 
   FILE *fp;
   char *source_str;
@@ -136,7 +133,7 @@ int main(void) {
     // Execute the OpenCL kernel on the list
     //size_t global_item_size = 1000000; // How many times we run the kernel in total
     //size_t global_item_size = 5000000; // How many times we run the kernel in total
-    size_t global_item_size = 500; // How many times we run the kernel in total
+    size_t global_item_size = 1; // How many times we run the kernel in total
     size_t local_item_size = 1; // Process in groups of 1
     //clock_t begin = clock();//for testing only.
     ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, 
@@ -152,7 +149,7 @@ int main(void) {
     //printf("speed result: %f megahashes per second per CPU\n", speed);//for testing only
 
     // Display the result to the screen
-    for(i = 68; i < 100; i++) {
+    for(i = 0; i < 100; i++) {
       //<<202,151,129,18,202,27,189,202,250,194,49,179,154,35,220,
       if ((i % 4) == 0) {
 	printf("\n");
