@@ -17,6 +17,8 @@ sh compile.sh
 * we can calculate the hash of a header correctly.
 * we can calculate hash2integer correctly.
 
+* We can can calculate the hash of arbitrary binaries correctly
+
 
 ## The next steps
 

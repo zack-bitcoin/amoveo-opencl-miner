@@ -29,7 +29,7 @@ unpack_mining_data(R) ->
     {F, S, Third}.
 start() ->
     inets:start(),
-    file:delete("nonce.txt"),
+    %file:delete("nonce.txt"),
     io:fwrite("Started mining.\n"),
     start2().
 start2() ->
@@ -51,9 +51,9 @@ read_nonce(N) ->
 	    io:fwrite("\n"),
 	    Nonce;
 	{ok, <<>>} -> 
-	    %io:fwrite("nonce failed "),
-	    %io:fwrite(integer_to_list(N)),
-	    %io:fwrite("\n"),
+	    io:fwrite("nonce failed "),
+	    io:fwrite(integer_to_list(N)),
+	    io:fwrite("\n"),
 	    timer:sleep(100),
 	    read_nonce(N-1)
     end.

@@ -10,6 +10,7 @@
 
 #define MAX_SOURCE_SIZE (0x100000)
 
+/*
 int read_input(unsigned char B[32], unsigned char N[32]) {
   FILE *fileptr;
   fileptr = fopen("mining_input", "rb");
@@ -26,6 +27,35 @@ int read_input(unsigned char B[32], unsigned char N[32]) {
   unsigned char buffer[10] = { 0 };
   fread(buffer, filelen-64, 1, fileptr);
   unsigned int diff = 0;
+  unsigned char c = 1;
+  for (int i = 0; i < 10; i++) {
+    c = buffer[i];
+    if (c == 0) {
+      break;
+    }
+    diff *= 10;
+    diff += (c - '0');
+  }
+  fclose(fileptr); // Close the file
+  return diff;
+}
+*/
+int read_input(unsigned char B[32], unsigned char N[32], unsigned int id) {
+  FILE *fileptr;
+  fileptr = fopen("mining_input", "rb");
+  fseek(fileptr, 0, SEEK_END);  // Jump to the end of the file
+  int filelen = ftell(fileptr); // Get the current byte offset in the file
+  //ftell returns a long, maybe we shouldn't truncate it.
+  rewind(fileptr); 
+  fread(B, 32, 1, fileptr);
+  fread(N, 32, 1, fileptr);
+  //N[28] = id % 256;
+  //N[29] = (id / 256) % 256;
+  //N[30] = ((id / 256) / 256) % 256;
+  //N[31] = (((id / 256) / 256) / 256) % 256;
+  unsigned char buffer[10] = { 0 };
+  fread(buffer, filelen-64, 1, fileptr);
+  int diff = 0;
   unsigned char c = 1;
   for (int i = 0; i < 10; i++) {
     c = buffer[i];
@@ -72,19 +102,20 @@ int main(void) {
   };
   int difficulty = 300;
   */
-  unsigned int difficulty = read_input(bhash, nonce);
+  unsigned int id = 0;
+  unsigned int difficulty = read_input(bhash, nonce, id);
   printf("difficulty %u\n", difficulty);
   const int INPUT_SIZE = 1024;
   unsigned char *A = (unsigned char*)malloc(sizeof(char)*INPUT_SIZE);//maybe we should make a different nonce for each kernel.
   for(i = 0; i < 32; i++) {
     A[i] = bhash[i];
-    A[i+32] = nonce[i];
+    A[i+34] = nonce[i];
     A[i+68] = 0;
   }
-  A[64] = difficulty / 256;
-  A[65] = difficulty % 256;
-  A[66] = 0;
-  A[67] = 0;
+  A[32] = difficulty / 256;
+  A[33] = difficulty % 256;
+  //A[66] = 0;
+  //A[67] = 0;
   FILE *fp;
   char *source_str;
   size_t source_size;
@@ -133,9 +164,9 @@ int main(void) {
     ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&a_mem_obj);
 
     // Execute the OpenCL kernel on the list
-    //size_t global_item_size = 1000000; // How many times we run the kernel in total
+    size_t global_item_size = 1000000; // How many times we run the kernel in total
     //size_t global_item_size = 5000000; // How many times we run the kernel in total
-    size_t global_item_size = 5000; // How many times we run the kernel in total
+    //size_t global_item_size = 1; // How many times we run the kernel in total
     size_t local_item_size = 1; // Process in groups of 1
     //clock_t begin = clock();//for testing only.
     ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, 
@@ -162,10 +193,17 @@ int main(void) {
     for(i = 0; i < 32; i++) {
       work[i] = C[i + 68];
     }
+    //unsigned char work[32];
+    //for(i = 0; i < 8; i++) {
+      //work[(i*4) + 3] = work0[(i*4) + 0];
+      //work[(i*4) + 2] = work0[(i*4) + 1];
+      //work[(i*4) + 1] = work0[(i*4) + 2];
+      //work[(i*4) + 0] = work0[(i*4) + 3];
+      //}
     if ((work[0] == 0) && (work[1] == 0) && (work[2] == 0) && (work[3] == 0)) {
       printf("no block found this time\n");
     } else {
-      printf("found a block %u\n", work[0]);
+      printf("found a block %u %u\n", work[0], work[31]);
       write_nonce(work);
     }
    

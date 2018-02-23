@@ -49,10 +49,10 @@ __kernel void amoveo_mine(__global uchar *Z) {
   uchar carry_flag = 1;
   for (uint i = 0; i < 32; i++) {
     if (carry_flag == 1) {
-      if (Z[32 + i] == 255) {
-	Z[32 + i] = 0;
+      if (Z[34 + i] == 255) {
+	Z[34 + i] = 0;
       } else {
-	Z[32 + i] ++;
+	Z[34 + i] ++;
 	carry_flag = 0;
       }
     }
@@ -61,18 +61,24 @@ __kernel void amoveo_mine(__global uchar *Z) {
   //preparing for sha256
   uint data_info[3];
   //uchar plain_key[66] = "a";
-
-  uchar plain_key[67];// = "a";
+  uchar plain_key[66];// = "a";
   for (uint i = 0; i < 66; i++) {
     plain_key[i] = Z[i];
-    //plain_key[i] = 0;
+         //plain_key[i] = 0;
   }
+  /*
+  uchar plain_key[4];
+  for(uint i = 0; i < 4; i++) {
+    plain_key[i] = 0;
+  }
+  plain_key[1] = 1;
+  */
   data_info[0] = 64;
   data_info[1] = 1;//global work size
   //data_info[2] = strlen(plain_key);
   //  printf("plainkey length %u\n", strlen(plain_key));
-  data_info[2] = 66; 
-  //data_info[2] = 1;
+  data_info[2] = 66;
+  //data_info[2] = 4;
   //printf("%d\n", data_info[2]);
   uint digest[8];
   for (uint i = 0; i < 8; i++) {
@@ -242,12 +248,13 @@ __kernel void amoveo_mine(__global uchar *Z) {
   //printf("our diff %u\n", our_diff);
   //check if our_diff > difficulty
   //if it is, then save the nonce.
-  uint difficulty = (256 * Z[64]) + Z[65];
+  uint difficulty = (256 * Z[32]) + Z[33];
   if (our_diff > difficulty) {
+    printf("ourdiff %d > target %d\n", our_diff, difficulty);
     for (uint i = 0; i < 32; i++) {
-      Z[68+i] = Z[32+i];
+      Z[68+i] = Z[34+i];
     }
-  }
+  } 
   /*
     printf("digest bytes\n");
     for (uint i = 0; i < 32; i++) {
@@ -257,6 +264,7 @@ __kernel void amoveo_mine(__global uchar *Z) {
     printf("%u ", digest_bytes[i]);
     }     
     printf("\ndigest bytes end\n");
+    
   */
   
 
