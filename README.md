@@ -3,6 +3,22 @@ OpenCL Amoveo miner
 
 This is the best miner for Amoveo currently available.
 
+## dependencies
+
+for ubuntu
+```
+   sudo apt-get install erlang libncurses5-dev libssl-dev unixodbc-dev g++ git
+```
+
+for mac:
+
+install erlang version 18 or higher.
+You can use [Homebrew](https://brew.sh):
+```
+brew install erlang
+```
+you also need git.
+
 
 ## installation
 ```
