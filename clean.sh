@@ -1,0 +1,1 @@
+pkill amoveo_miner

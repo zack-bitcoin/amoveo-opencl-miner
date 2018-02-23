@@ -1,10 +1,10 @@
 -module(miner)
 .
 -export([start/0, unpack_mining_data/1, speed_test/0, read_nonce/1]).
--define(Peer, "http://localhost:3011/").%for a test-node
+%-define(Peer, "http://localhost:3011/").%for a test-node
 %-define(Peer, "http://localhost:8081/").%for a full node on same computer.
 %-define(Peer, "http://localhost:8085/").%for a mining pool on the same computer.
-%-define(Peer, "http://159.89.106.253:8085/").%for a mining pool on the server.
+-define(Peer, "http://159.89.106.253:8085/").%for a mining pool on the server.
 -define(CORES, 1).
 -define(Pubkey, <<"BMjV7rAAssU+DGd8w+6XsyDSdgoichddlSipZT3U+jehHSD68UwPdF9TO3HQ0g4hCh2rgUQyqPnP7vP0i/l8Ijw=">>).
 -define(period, 10).%how long to wait in seconds before checking if new mining data is available.

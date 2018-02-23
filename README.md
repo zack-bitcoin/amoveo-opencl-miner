@@ -1,26 +1,52 @@
 OpenCL Amoveo miner
 ==========
 
+This is the best miner for Amoveo currently available.
 
 
-This is a work in progress.
-
-## build and run
-
+## installation
 ```
-sh compile.sh
-./amoveo_miner
+git clone https://github.com/zack-bitcoin/amoveo-opencl-miner.git
 ```
 
-## done
 
-* we can calculate the hash of a header correctly.
-* we can calculate hash2integer correctly.
+## configure
 
-* We can can calculate the hash of arbitrary binaries correctly
+You can connect it to a full node. Change the url at the top of miner.erl to point to your full node. It is named `Peer`. This gives all your money to whoever runs that full node.
+
+You can also connect to a mining pool. If you connect to a mining pool, you get paid by the person running the pool.
+This way you don't have to run Amoveo.
+set `Peer` to be the url for the mining pool.
+
+By default `Peer` is set up to connect to a public mining pool.
+
+Put your pubkey into the `Pubkey` definition at the top of miner.erl so that you can get paid. 
 
 
-## The next steps
+
+## mining
+
+On ubuntu and Mac OSX, it can be compiled and turned on like this: 
+```
+sh compile.sh 
+```
+Then you start mining like this:
+```
+miner:start().
+```
+To turn it off, first use `Control + C`, `a`, `enter` to exit the erlang interface.
+Then to kill the miner processes, do:
+```
+sh clean.sh
+```
 
 
-* connect the c code to the erlang from amoveo-c-miner so we can give the work to the server.
+
+
+## other notes
+
+[Here is a link to where the same mining is implemented in erlang. The 'pow' function is the one to look at](https://github.com/BumblebeeBat/pink_crypto)
+
+[Here it is implemented in C language](https://github.com/zack-bitcoin/amoveo-c-miner)
+
+[Here is a link to the main Amoveo repo.](https://github.com/zack-bitcoin/amoveo). If you want to solo mine without a mining pool, you will need this. Solo miners make more profit.
