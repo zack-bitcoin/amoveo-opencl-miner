@@ -79,8 +79,7 @@ start_c_miners(R) ->
             %io:fwrite("Found a block. 1\n"),
 	    Nonce = read_nonce(2),
 	    case Nonce of 
-		0 -> io:fwrite("did not find a block in that period\n"),
-		     start2();
+		0 -> io:fwrite("did not find a block in that period\n");
 		_ ->
 		    BinNonce = base64:encode(<<Nonce:256>>),
 		    Data = << <<"[\"work\",\"">>/binary, BinNonce/binary, <<"\",\"">>/binary, ?Pubkey/binary, <<"\"]">>/binary>>,
@@ -88,7 +87,8 @@ start_c_miners(R) ->
 		    io:fwrite("Found a block. 2\n"),
 		    file:delete("nonce.txt"),
 		    timer:sleep(200)
-	    end
+	    end,
+	    start2()
     end.
 talk_helper2(Data, Peer) ->
     httpc:request(post, {Peer, [], "application/octet-stream", iolist_to_binary(Data)}, [{timeout, 3000}], []).

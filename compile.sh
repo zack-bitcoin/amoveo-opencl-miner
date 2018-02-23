@@ -7,4 +7,4 @@ gcc amoveo_miner.c -Wall -o amoveo_miner -framework OpenCL
 erlc miner.erl
 
 # finally start an erlang interpreter so you can call the program.
-# erl
+ erl
