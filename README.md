@@ -5,6 +5,8 @@ This is the best miner for Amoveo currently available.
 
 ## dependencies
 
+You will need openCL software that is compatible with your graphics card.
+
 for ubuntu
 ```
    sudo apt-get install erlang libncurses5-dev libssl-dev unixodbc-dev g++ git
