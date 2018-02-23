@@ -51,9 +51,9 @@ read_nonce(N) ->
 	    io:fwrite("\n"),
 	    Nonce;
 	{ok, <<>>} -> 
-	    io:fwrite("nonce failed "),
-	    io:fwrite(integer_to_list(N)),
-	    io:fwrite("\n"),
+	    %io:fwrite("nonce failed "),
+	    %io:fwrite(integer_to_list(N)),
+	    %io:fwrite("\n"),
 	    timer:sleep(100),
 	    read_nonce(N-1)
     end.

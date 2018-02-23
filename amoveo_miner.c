@@ -164,8 +164,8 @@ int main(void) {
     ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&a_mem_obj);
 
     // Execute the OpenCL kernel on the list
-    size_t global_item_size = 1000000; // How many times we run the kernel in total
-    //size_t global_item_size = 5000000; // How many times we run the kernel in total
+    //size_t global_item_size = 1000000; // How many times we run the kernel in total
+    size_t global_item_size = 10000000; // How many times we run the kernel in total
     //size_t global_item_size = 1; // How many times we run the kernel in total
     size_t local_item_size = 1; // Process in groups of 1
     //clock_t begin = clock();//for testing only.
