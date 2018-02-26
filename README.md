@@ -78,6 +78,15 @@ sh clean.sh
 ```
 
 
+## speed test
+
+first build the software
+``` sh compile.sh```
+then exit from erlang
+```halt().```
+then run the executable
+```./amoveo_miner```
+It takes about 6 seconds on my computer.
 
 
 ## other notes
