@@ -14,7 +14,6 @@ Nvidia driver / SDK link https://developer.nvidia.com/cuda-downloads
 
 Windows:
 OpenCL SDK can be downloaded by link https://developer.amd.com/amd-accelerated-parallel-processing-app-sdk/. Also you can try another OpenCL SDK vendors. Path to intalled SDK should be written to a new environment variable OPENCL_SDK.
-Boost and OpenSSL libraries are included by Nuget Manager and should be downloaded automatically.
 
 
 ## other dependencies
