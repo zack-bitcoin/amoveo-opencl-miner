@@ -1,7 +1,7 @@
 OpenCL Amoveo miner
 ==========
 
-This is the best miner for Amoveo currently available.
+This is the best miner for Amoveo currently available. It is a CPU miner.
 
 ## OpenCL dependency
 
