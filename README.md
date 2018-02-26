@@ -3,14 +3,27 @@ OpenCL Amoveo miner
 
 This is the best miner for Amoveo currently available.
 
-## dependencies
+## OpenCL dependency
 
 You will need openCL software that is compatible with your graphics card.
+I think this might come default with Mac, since I didn't have to install anything on my laptop for this.
+
+Linux:
+AMD driver / SDK link https://developer.amd.com/amd-accelerated-parallel-processing-app-sdk/
+Nvidia driver / SDK link https://developer.nvidia.com/cuda-downloads
+
+Windows:
+OpenCL SDK can be downloaded by link https://developer.amd.com/amd-accelerated-parallel-processing-app-sdk/. Also you can try another OpenCL SDK vendors. Path to intalled SDK should be written to a new environment variable OPENCL_SDK.
+Boost and OpenSSL libraries are included by Nuget Manager and should be downloaded automatically.
+
+
+## other dependencies
 
 for ubuntu
 ```
    sudo apt-get install erlang libncurses5-dev libssl-dev unixodbc-dev g++ git
 ```
+This list probably includes more dependencies than you actually need.
 
 for mac:
 
@@ -19,13 +32,19 @@ You can use [Homebrew](https://brew.sh):
 ```
 brew install erlang
 ```
-you also need git.
+There might be other dependencies too.
+
+for windows:
+I don't have a windows machine to find out.
+
 
 
 ## installation
+you need git to install this way.
 ```
 git clone https://github.com/zack-bitcoin/amoveo-opencl-miner.git
 ```
+or you can use your browser to download it [by clicking here](https://github.com/zack-bitcoin/amoveo-opencl-miner/archive/master.zip)
 
 
 ## configure
